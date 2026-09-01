@@ -2,7 +2,7 @@
 
 # CM.gd - Godot Multiplayer Framework▗
 
-[Documentation]() ⁃ [Discord](https://discord.gg/Wy3bSMAV7v)
+[Documentation](https://cmgd.dev/) ⁃ [Discord](https://discord.gg/Wy3bSMAV7v)
 
 CM.gd is a multiplayer game framework that abstracts Godot's multiplayer layer as objects and lets you create single-player, Couch Co-op multiplayer, and networked multiplayer from a single Godot Project. Inspired by Photon and Mirror Networking.
 
