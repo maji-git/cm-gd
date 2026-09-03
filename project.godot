@@ -11,14 +11,14 @@ config_version=5
 [application]
 
 config/name="CM"
-run/main_scene="uid://cw7t3kxulgg17"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
 [debug]
 
 gdscript/warnings/directory_rules={
-"res://addons": 1
+"res://addons": 1,
+"res://addons/gut": 0
 }
 gdscript/warnings/untyped_declaration=1
 gdscript/warnings/unsafe_property_access=1
@@ -33,7 +33,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/cm-gd/plugin.cfg")
+enabled=PackedStringArray("res://addons/cm-gd/plugin.cfg", "res://addons/gut/plugin.cfg")
 
 [physics]
 

@@ -2,6 +2,5 @@
 * text=auto eol=lf
 
 /**			export-ignore
-/addons			!export-ignore
 /addons/cm-gd		!export-ignore
 /addons/cm-gd/**	!export-ignore

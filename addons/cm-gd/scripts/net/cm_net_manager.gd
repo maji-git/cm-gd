@@ -123,6 +123,10 @@ func start_client() -> void:
 	server_connecting.emit()
 	current_multiplayer_peer = t.net_connect()
 	multiplayer.multiplayer_peer = current_multiplayer_peer
+	
+	# If is offline, proceed without waiting for server that doesn't exist
+	if current_multiplayer_peer is OfflineMultiplayerPeer:
+		_connected_to_server()
 
 func start_offline() -> void:
 	transport = CMNetTransportOffline.new()
@@ -138,7 +142,8 @@ func _deinit_before_start_new() -> void:
 func _deinit_mpeer() -> void:
 	if current_multiplayer_peer != null:
 		current_multiplayer_peer.close()
-		multiplayer.multiplayer_peer = null
+		if multiplayer != null:
+			multiplayer.multiplayer_peer = null
 
 func stop_net() -> void:
 	if not is_net_active: return
@@ -159,7 +164,6 @@ func _connection_failed() -> void:
 	server_connection_failure.emit()
 
 func _connected_to_server() -> void:
-	is_net_active = true
 	my_peer_id = multiplayer.get_unique_id()
 	# request peer from server
 	_net_req_peer.rpc_id(1)
@@ -174,7 +178,7 @@ func get_peer_from_rpc_id(id: int) -> CMNetPeer:
 		return peer_id_to_peer[id]
 	return null
 
-@rpc("reliable", "any_peer")
+@rpc("reliable", "any_peer", "call_local")
 func _net_req_peer() -> void:
 	# Init peer
 	var peer_id := multiplayer.get_remote_sender_id()
@@ -204,8 +208,9 @@ func _add_player_async() -> CMPlayer:
 func _remove_player(plr: CMPlayer) -> void:
 	_net_remove_player.rpc_id(1, plr.player_id)
 
-@rpc("reliable", "authority")
+@rpc("reliable", "authority", "call_local")
 func _net_req_peer_complete() -> void:
+	is_net_active = true
 	is_connected_to_server = true
 	server_connected.emit()
 	net_activated.emit()
