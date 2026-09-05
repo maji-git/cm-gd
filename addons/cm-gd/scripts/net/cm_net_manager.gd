@@ -32,6 +32,12 @@ var allow_player_condition: Callable
 @export_subgroup("Debug")
 ## Transport to use when debugging, if not set. transport will be used
 @export var debug_transport: CMNetTransportBase
+## Debug window title, if true. Window title will change to the peer ID which helps you identify what peer that window is.
+## Only works in debug builds
+@export var debug_window_title: bool = true
+## Debug warning, if true. CM will log warning telling what peer it is in the debugger, helping you identify what peer that debug session is.
+## Only works in debug builds
+@export var debug_warning: bool = true
 
 ## Is the current machine the server
 var is_server := false
@@ -43,6 +49,8 @@ var my_peer_id: int = 0
 var local_peer: CMNetPeer
 
 var peer_id_to_peer: Dictionary[int, CMNetPeer] = {}
+
+@onready var _is_debug: bool = OS.is_debug_build()
 
 ## Array of all connected peers
 var connected_peers: Array[CMNetPeer]:
@@ -89,6 +97,9 @@ func _pick_transport() -> CMNetTransportBase:
 func start_server() -> void:
 	_deinit_before_start_new() # Cleanup Previous Multiplayer Peer before starting a new one
 	
+	if _is_debug and debug_warning:
+		push_warning("[CM] Server")
+	
 	var t := _pick_transport()
 	if t == null:
 		assert(false, "start_server: Transport is null, cannot start server")
@@ -111,6 +122,7 @@ func start_server() -> void:
 		_assign_player_to_netpeer(p, local_peer)
 	
 	net_activated.emit()
+	_debug_update_wintitle()
 
 func start_client() -> void:
 	_deinit_before_start_new() # Cleanup Previous Multiplayer Peer before starting a new one
@@ -128,6 +140,8 @@ func start_offline() -> void:
 	transport = CMNetTransportOffline.new()
 	debug_transport = null
 	start_server()
+	if _is_debug and debug_warning:
+		push_warning("[CM] -> Offline mode")
 
 # Deinit but keep the local peer
 func _deinit_before_start_new() -> void:
@@ -148,6 +162,7 @@ func stop_net() -> void:
 	my_peer_id = 0
 	local_peer = null
 	net_stopped.emit()
+	_debug_update_wintitle()
 
 func _cleanup_net(except_local: bool = false) -> void:
 	@warning_ignore("untyped_declaration")
@@ -161,8 +176,12 @@ func _connection_failed() -> void:
 func _connected_to_server() -> void:
 	is_net_active = true
 	my_peer_id = multiplayer.get_unique_id()
+	_debug_update_wintitle()
 	# request peer from server
 	_net_req_peer.rpc_id(1)
+	
+	if _is_debug and debug_warning:
+		push_warning("[CM] Client (Peer ID: %d)" % [my_peer_id])
 
 func _disconnected_from_server() -> void:
 	is_connected_to_server = false
@@ -209,6 +228,7 @@ func _net_req_peer_complete() -> void:
 	is_connected_to_server = true
 	server_connected.emit()
 	net_activated.emit()
+	_debug_update_wintitle()
 
 @rpc("reliable", "any_peer", "call_local")
 func _net_new_player() -> void:
@@ -452,3 +472,12 @@ func _net_rpc_handler(_is_reliable: bool, obj_path: NodePath, method_name: Strin
 					CM.rpc_sender_id = -1
 				else:
 					push_error("Cannot call '%s' on %s, network owner is %d but is called by %d" % [method_name, obj_path, n_authority, from_peer_id])
+
+func _debug_update_wintitle() -> void:
+	if _is_debug and debug_window_title:
+		# wait a bit because godot overrides the window title at the beginning
+		await get_tree().process_frame
+		
+		DisplayServer.window_set_title(\
+		"%s (Peer ID: %d)" % \
+		[ProjectSettings.get_setting("application/config/name"), my_peer_id])
