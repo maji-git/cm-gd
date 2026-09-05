@@ -34,10 +34,10 @@ var allow_player_condition: Callable
 @export var debug_transport: CMNetTransportBase
 ## Debug window title, if true. Window title will change to the peer ID which helps you identify what peer that window is.
 ## Only works in debug builds
-@export var debug_window_title: bool = true
+@export var debug_window_title_identifier: bool = true
 ## Debug warning, if true. CM will log warning telling what peer it is in the debugger, helping you identify what peer that debug session is.
 ## Only works in debug builds
-@export var debug_warning: bool = true
+@export var debug_warning_identifier: bool = true
 
 ## Is the current machine the server
 var is_server := false
@@ -97,7 +97,7 @@ func _pick_transport() -> CMNetTransportBase:
 func start_server() -> void:
 	_deinit_before_start_new() # Cleanup Previous Multiplayer Peer before starting a new one
 	
-	if _is_debug and debug_warning:
+	if _is_debug and debug_warning_identifier:
 		push_warning("[CM] Server")
 	
 	var t := _pick_transport()
@@ -140,7 +140,7 @@ func start_offline() -> void:
 	transport = CMNetTransportOffline.new()
 	debug_transport = null
 	start_server()
-	if _is_debug and debug_warning:
+	if _is_debug and debug_warning_identifier:
 		push_warning("[CM] -> Offline mode")
 
 # Deinit but keep the local peer
@@ -180,7 +180,7 @@ func _connected_to_server() -> void:
 	# request peer from server
 	_net_req_peer.rpc_id(1)
 	
-	if _is_debug and debug_warning:
+	if _is_debug and debug_warning_identifier:
 		push_warning("[CM] Client (Peer ID: %d)" % [my_peer_id])
 
 func _disconnected_from_server() -> void:
@@ -474,7 +474,7 @@ func _net_rpc_handler(_is_reliable: bool, obj_path: NodePath, method_name: Strin
 					push_error("Cannot call '%s' on %s, network owner is %d but is called by %d" % [method_name, obj_path, n_authority, from_peer_id])
 
 func _debug_update_wintitle() -> void:
-	if _is_debug and debug_window_title:
+	if _is_debug and debug_window_title_identifier:
 		# wait a bit because godot overrides the window title at the beginning
 		await get_tree().process_frame
 		
