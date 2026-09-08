@@ -4,14 +4,24 @@ extends CMManager
 ## Network Manager for CMSession
 class_name CMNetManager
 
+## Emits when client is connecting to the server
 signal server_connecting
+## Emits when client has connected to the server
 signal server_connected
+## Emits when client has failed to connect to the server
 signal server_connection_failure
+## Emits when client has connected to the server
 signal server_disconnected
+## Emits when net has been activated
 signal net_activated
+## Emits when net has been stopped
 signal net_stopped
 
+## Emits when a new peer has joined the network
 signal peer_joined(peer: CMNetPeer)
+## Emits when an existing peer has rejoined the network (eg. disconnected and rejoined)
+signal peer_rejoined(peer: CMNetPeer)
+## Emits when an existing peer left the peer, this emits before the peer gets free'd
 signal peer_left(peer: CMNetPeer)
 signal _local_peer_joined(player: CMPlayer)
 
@@ -45,10 +55,14 @@ var is_server := false
 var is_connected_to_server := false
 ## Is network active
 var is_net_active := false
+## This client's peer ID
 var my_peer_id: int = 0
+## This client's local peer
 var local_peer: CMNetPeer
 
+# Dicts
 var peer_id_to_peer: Dictionary[int, CMNetPeer] = {}
+var token_to_peer: Dictionary[String, CMNetPeer] = {}
 
 @onready var _is_debug: bool = OS.is_debug_build()
 var _is_exiting: bool = false
