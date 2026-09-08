@@ -50,6 +50,8 @@ Please refer to the [getting started guide](https://cmgd.dev/start-here/getting-
 
 ## Help!! I'm lost
 
+<img src="readme-assets/cm_duo.png" height="200" align="right">
+
 - You can join the [Discord](https://discord.gg/Wy3bSMAV7v) server if you need any help/questions using the framework!!
 
 ## Liking this framework?
