@@ -20,7 +20,7 @@ jobs:
       - name: 🔬 Verify Setup
         run: |
           godot --version
+      - name: ➡️ Import project
+        run: godot --headless --import --path "$PWD"
       - name: 🧪 Test
-        run:
-          godot --headless --import
-          godot --headless -s addons/gut/gut_cmdln.gd -d --path "$PWD"
+        run: godot --headless -s addons/gut/gut_cmdln.gd -d --path "$PWD" -gexit
