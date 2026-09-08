@@ -51,6 +51,7 @@ var local_peer: CMNetPeer
 var peer_id_to_peer: Dictionary[int, CMNetPeer] = {}
 
 @onready var _is_debug: bool = OS.is_debug_build()
+var _is_exiting: bool = false
 
 ## Array of all connected peers
 var connected_peers: Array[CMNetPeer]:
@@ -87,6 +88,7 @@ func _enter_tree() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_PREDELETE:
+		_is_exiting = true
 		stop_net()
 
 func _pick_transport() -> CMNetTransportBase:
@@ -479,7 +481,7 @@ func _net_rpc_handler(_is_reliable: bool, obj_path: NodePath, method_name: Strin
 					push_error("Cannot call '%s' on %s, network owner is %d but is called by %d" % [method_name, obj_path, n_authority, from_peer_id])
 
 func _debug_update_wintitle() -> void:
-	if _is_debug and debug_window_title_identifier:
+	if _is_debug and debug_window_title_identifier and not _is_exiting:
 		# wait a bit because godot overrides the window title at the beginning
 		await get_tree().process_frame
 		

@@ -63,7 +63,7 @@ func _process(delta: float) -> void:
 
 func take_authority() -> void:
 	if not net.is_net_active: return
-	if is_multiplayer_authority() == false and authority_mode != NetSync.NetSyncAuthorityMode.SHARED:
+	if not NetSync.can_take_authority(net.my_peer_id, get_multiplayer_authority(), authority_mode):
 		push_error("NetTransformSync2D: cannot take authority: this node is owned by peer %d. Set authority_mode to SHARED or call take_authority() from the owning peer.", get_multiplayer_authority())
 		return
 	
@@ -113,7 +113,7 @@ func _st_authority(pos: Vector2, rot: float, scl: Vector2, snap: bool) -> void:
 func _st_take_authority() -> void:
 	var from_peer := CM.rpc_sender_peer
 	if not net.is_net_active: return
-	if get_multiplayer_authority() != from_peer.peer_id and authority_mode == NetSync.NetSyncAuthorityMode.SINGLE_AUTHORITY: return
+	if not NetSync.can_take_authority(from_peer.peer_id, get_multiplayer_authority(), authority_mode): return
 	owner_peer = from_peer
 	_has_authority = from_peer.is_local
 	if _has_authority:
