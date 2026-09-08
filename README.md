@@ -46,7 +46,7 @@ Also checkout [netfox](https://store.godotengine.org/asset/foxssake/netfox/)! I'
 
 ## Getting started with the framework
 
-Please refer to the getting started guide to get started!
+Please refer to the [getting started guide](https://cmgd.dev/start-here/getting-started/) to get started!
 
 ## Help!! I'm lost
 
