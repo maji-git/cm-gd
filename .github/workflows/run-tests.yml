@@ -1,5 +1,5 @@
 name: Run Unit Tests
-on: [] # disabled for now due to billing issues
+on: push
 
 jobs:
   tests:
@@ -11,23 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: 🧾 Checkout
-      - name: 📦 Restore Dependencies
-        run: dotnet restore
-
       - uses: chickensoft-games/setup-godot@v2
         name: 🤖 Setup Godot
         with:
-          # Version must include major, minor, and patch, and be >= 4.0.0
-          # Pre-release label is optional.
-          version: 4.0.0-beta16
+          version: 4.7.2
           use-dotnet: false
-          # Include the Godot Export Templates (the default is false).
           include-templates: false
-
       - name: 🔬 Verify Setup
         run: |
-          dotnet --version
           godot --version
-
+      - name: ➡️ Import project
+        run: godot --headless --import --path "$PWD"
       - name: 🧪 Test
-        run: godot -s addons/gut/gut_cmdln.gd -d --path "$PWD"
+        run: godot --headless -s addons/gut/gut_cmdln.gd -d --path "$PWD" -gexit
