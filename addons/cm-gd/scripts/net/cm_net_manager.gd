@@ -19,8 +19,6 @@ signal net_stopped
 
 ## Emits when a new peer has joined the network
 signal peer_joined(peer: CMNetPeer)
-## Emits when an existing peer has rejoined the network (eg. disconnected and rejoined)
-signal peer_rejoined(peer: CMNetPeer)
 ## Emits when an existing peer left the peer, this emits before the peer gets free'd
 signal peer_left(peer: CMNetPeer)
 signal _local_peer_joined(player: CMPlayer)
