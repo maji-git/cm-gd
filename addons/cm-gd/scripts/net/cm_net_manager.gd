@@ -98,6 +98,9 @@ func _enter_tree() -> void:
 	multiplayer.connection_failed.connect(_connection_failed)
 	multiplayer.server_disconnected.connect(_disconnected_from_server)
 
+func _get_manager_shortname() -> String:
+	return "Net"
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_PREDELETE:
 		_is_exiting = true

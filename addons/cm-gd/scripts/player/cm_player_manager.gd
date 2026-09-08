@@ -29,6 +29,9 @@ func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	Input.joy_connection_changed.connect(_joy_connection_changed)
 
+func _get_manager_shortname() -> String:
+	return "Player"
+
 func _joy_connection_changed(device: int, connected: bool) -> void:
 	# Auto remove player when the joy is disconnected
 	if auto_remove_disconnected_joy and connected == false:
