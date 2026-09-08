@@ -1,7 +1,7 @@
 @icon("res://addons/cm-gd/icons/CM.svg")
 class_name CM
 
-const VERSION = "0.0.1"
+const VERSION = "0.1.0"
 
 static var sessions: Array[CMSession] = []
 
