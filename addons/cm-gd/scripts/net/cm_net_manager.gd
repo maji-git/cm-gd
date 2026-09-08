@@ -374,13 +374,12 @@ func _peer_disconnected(id: int) -> void:
 	var peer := get_peer_from_rpc_id(id)
 	if peer == null: return
 	
-	peer_left.emit(peer)
-	
 	# Cleanup player
 	_cleanup_plrs_in_peer(peer)
 	
-	# Cleanup peer
 	peer_id_to_peer.erase(id)
+	peer_left.emit(peer)
+	# Cleanup peer
 	peer.queue_free()
 
 func _cleanup_plrs_in_peer(peer: CMNetPeer) -> void:
