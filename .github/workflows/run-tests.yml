@@ -1,5 +1,5 @@
 name: Run Unit Tests
-on: push
+on: [] # disabled for now due to billing issues
 
 jobs:
   tests:
