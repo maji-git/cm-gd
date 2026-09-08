@@ -11,20 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: 🧾 Checkout
-      - name: 📦 Restore Dependencies
-        run: dotnet restore
-
       - uses: chickensoft-games/setup-godot@v2
         name: 🤖 Setup Godot
         with:
           version: 4.7.2
           use-dotnet: false
           include-templates: false
-
       - name: 🔬 Verify Setup
         run: |
-          dotnet --version
           godot --version
-
       - name: 🧪 Test
         run: godot -s addons/gut/gut_cmdln.gd -d --path "$PWD"
